@@ -1,5 +1,4 @@
 <?php include "includes/admin_header.php"; ?>
-
 <div id="wrapper">
 
     <!-- Navigation -->
@@ -17,7 +16,13 @@
                     </h1>
                     <div class="col-xs-6">
 
-                        <form action="">
+
+
+                        <?php
+                        insert_category();
+
+                        ?>
+                        <form action="" method="post">
                             <div class="form-group">
                                 <label for="cat-title" class="">Add category</label>
                                 <input type="text" class="form-control" name="cat_title">
@@ -26,8 +31,18 @@
                                 <input class="btn btn-primary" type="submit" name="submit" value="Add category">
                             </div>
                         </form>
-                    </div>
 
+
+
+                        <!-- edit category -->
+                        <?php if (isset($_GET['edit'])) {
+                            $cat_id = $_GET['edit'];
+                            include "includes/update_categories.php";
+                        }
+                        ?>
+
+
+                    </div>
                     <div class="col-xs-6">
 
                         <?php
@@ -47,15 +62,13 @@
 
 
                                 <?php
+                                // find all categories
+                                findAllCategories();
+                                ?>
 
-                                while ($row = mysqli_fetch_assoc($select_categories)) {
-                                    $cat_id = $row['cat_id'];
-                                    $cat_title = $row['cat_title'];
-                                    echo "<tr>";
-                                    echo "<td>{$cat_id}</td>";
-                                    echo "<td>{$cat_title}</td>";
-                                    echo "</tr>";
-                                }
+                                <?php
+                                // delete query
+                                deleteCategory();
                                 ?>
 
                             </tbody>
