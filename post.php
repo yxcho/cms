@@ -20,7 +20,7 @@ include "includes/db.php";
             }
 
 
-            $query = "SELECT * FROM posts WHERE post_id = $the_post_id";
+            $query = "SELECT * FROM posts WHERE post_id = {$the_post_id}";
             $select_all_posts_query = mysqli_query($connection, $query);
 
             while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
@@ -84,7 +84,7 @@ include "includes/db.php";
                 $query .= "WHERE post_id = $the_post_id";
 
                 $update_comment_count = mysqli_query($connection,$query);
-                
+
             }
             ?>
             <!-- Comments Form -->
@@ -141,9 +141,7 @@ include "includes/db.php";
 
 
 
-            <?php
-
-            } ?>
+            <?php } ?>
 
 
 
