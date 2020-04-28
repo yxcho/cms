@@ -27,6 +27,8 @@ if (isset($_POST['create_user'])) {
 
     confirmQuery($create_user_query);
 
+
+    echo "User created: " . "<a href = 'users.php' >View users</a>";
     //   $the_post_id = mysqli_insert_id($connection);
 
 

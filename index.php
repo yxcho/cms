@@ -27,15 +27,8 @@ include "includes/db.php";
                 $post_content = substr($row['post_content'], 0, 100);
                 $post_status = $row['post_status'];
 
-                if ($post_status == "draft") {
-                    echo "<h1 class='text-center'>Sorry there is no post here</h1>";
-                } else {
-
+                if ($post_status === "published") {
             ?>
-
-
-
-
                     <h1 class="page-header">
                         Page Heading
                         <small>Secondary Text</small>
