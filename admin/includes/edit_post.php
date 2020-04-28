@@ -60,6 +60,8 @@ if (isset($_POST['update_post'])) {
     $update_post = mysqli_query($connection, $query);
 
     confirmQuery($update_post);
+
+    echo "<p class='bg-success'>Post updated. <a href= '../post.php?p_id={$the_post_id}'> View post</a> or <a href='posts.php'>Edit other posts</a></p>";
 }
 ?>
 
@@ -74,7 +76,7 @@ if (isset($_POST['update_post'])) {
     </div>
 
     <div class="form-group">
-    <label for="post_categories">Categories</label>
+        <label for="post_categories">Categories</label>
         <select name="post_category" id="">
 
             <?php
@@ -102,8 +104,12 @@ if (isset($_POST['update_post'])) {
     <div class="form-group">
         <select name="post_status" id="">
             <option value="<?php echo $post_status; ?>"><?php echo $post_status; ?></option>
-            <option value="published">Published</option>
-            <option value="draft">Draft</option>
+            <?php if ($post_status == "published") {
+                echo "<option value='draft'>Draft</option>";
+            } else {
+                echo "<option value='published'>Published</option>";
+            }
+            ?>
         </select>
     </div>
 
@@ -111,7 +117,7 @@ if (isset($_POST['update_post'])) {
 
     <div class="form-group">
         <img width="100" src="../images/<?php echo $post_image; ?>" alt="image">
-        <input  type="file" name="image">
+        <input type="file" name="image">
 
     </div>
 

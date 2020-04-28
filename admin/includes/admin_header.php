@@ -24,6 +24,8 @@ if (!isset($_SESSION['user_role'])) {
 
     <title>SB Admin - Bootstrap Admin Template</title>
 
+    <script src="js/scripts.js"></script>
+
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
@@ -39,8 +41,9 @@ if (!isset($_SESSION['user_role'])) {
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/classic/ckeditor.js"></script>
+    <!-- <script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/inline/ckeditor.js"></script> -->
 </head>
 
 <body>

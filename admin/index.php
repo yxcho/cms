@@ -24,6 +24,11 @@
             <?php include "admin_widgets.php"; ?>
 
             <?php
+
+            $query = "SELECT * FROM posts WHERE post_status = 'published'";
+            $select_all_published_posts = mysqli_query($connection, $query);
+            $publish_post_count = mysqli_num_rows($select_all_published_posts);
+
             $query = "SELECT * FROM posts WHERE post_status = 'draft'";
             $select_all_draft_posts = mysqli_query($connection, $query);
             $draft_post_count = mysqli_num_rows($select_all_draft_posts);
@@ -56,11 +61,11 @@
 
 
                             <?php
-                            $element_text = ["Active Posts", "Draft Posts", "Comments", "Pending comments", "Users", "Subscribers", "Categories"];
-                            $element_count = [$post_count, $draft_post_count, $comments_count, $rejected_comments_count, $users_count, $subscriber_count, $categories_count];
+                            $element_text = ["All posts", "Active Posts", "Draft Posts", "Comments", "Pending comments", "Users", "Subscribers", "Categories"];
+                            $element_count = [$post_count, $publish_post_count, $draft_post_count, $comments_count, $rejected_comments_count, $users_count, $subscriber_count, $categories_count];
 
                             // the data will look like ['Posts', 1000]
-                            for ($i = 0; $i < 7; $i++) {
+                            for ($i = 0; $i < 8; $i++) {
                                 echo "['{$element_text[$i]}'" . ', ' . "{$element_count[$i]}], ";
                             }
                             ?>
