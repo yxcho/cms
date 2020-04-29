@@ -2,7 +2,7 @@
 
 
 if (isset($_POST['create_post'])) {
-
+    
     $post_title        = ($_POST['title']);
     $post_author         = ($_POST['author']);
     $post_category_id  = ($_POST['post_category']);
@@ -29,10 +29,10 @@ if (isset($_POST['create_post'])) {
 
     confirmQuery($create_post_query);
 
-    //   $the_post_id = mysqli_insert_id($connection);
+    // to pull out the last post_id so that we can use the increment of it for the "view post" link in the next line
+    $the_post_id = mysqli_insert_id($connection);
+    echo "<p class='bg-success'>Post created. <a href= '../post.php?p_id={$the_post_id}'> View post</a> or <a href='posts.php'>Edit other posts</a></p>";
 
-
-    //   echo "<p class='bg-success'>Post Created. <a href='../post.php?p_id={$the_post_id}'>View Post </a> or <a href='posts.php'>Edit More Posts</a></p>";
 
 
 
@@ -62,7 +62,7 @@ if (isset($_POST['create_post'])) {
             $select_categories = mysqli_query($connection, $query);
             confirmQuery($select_categories);
 
-            while($row = mysqli_fetch_assoc($select_categories)){
+            while ($row = mysqli_fetch_assoc($select_categories)) {
                 $cat_id = $row['cat_id'];
                 $cat_title = $row['cat_title'];
 
@@ -81,9 +81,10 @@ if (isset($_POST['create_post'])) {
 
 
     <div class="form-group">
+
         <select name="post_status" id="">
-            <option value="draft">Post Status</option>
-            <option value="published">Published</option>
+            <option value="draft">Post status</option>
+            <option value="published">Publish</option>
             <option value="draft">Draft</option>
         </select>
     </div>
@@ -101,7 +102,7 @@ if (isset($_POST['create_post'])) {
     </div>
 
 
-    <div class="form-group" >
+    <div class="form-group">
         <label for="post_content">Post Content</label>
         <textarea id="body" class="form-control " name="post_content" cols="30" rows="10">
          </textarea>
