@@ -14,30 +14,7 @@ include "includes/db.php";
         <div class="col-md-8">
             <?php
 
-            $post_per_page = 5;
-
-            if (isset($_GET['page'])) {
-                $page = $_GET['page'];
-            } else {
-                $page = '';
-            }
-
-            if ($page == "" || $page == 1) {
-                $page_1 = 0;
-            } else {
-                // lets say its at third page (3*5)-5 = 10
-                $page_1 = ($page * $post_per_page) - $post_per_page;
-            }
-
-            // count total number of posts, to do pagination
-            $post_count_query = "SELECT * FROM posts";
-            $post_count = mysqli_query($connection, $post_count_query);
-            $total_post_count = mysqli_num_rows($post_count);
-            $page_needed = ceil($total_post_count / $post_per_page);
-
-
-            // With two arguments, the first argument specifies the offset of the first row to return, and the second specifies the maximum number of rows to return. The offset of the initial row is 0 (not 1)
-            $query = "SELECT * FROM posts LIMIT $page_1, $post_per_page";
+            $query = "SELECT * FROM posts";
             $select_all_posts_query = mysqli_query($connection, $query);
 
             while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
@@ -90,23 +67,4 @@ include "includes/db.php";
     <!-- /.row -->
 
     <hr>
-
-    <ul class="pager">
-        <?php
-        for ($i = 1; $i <= $page_needed; $i++) {
-            // to style the page number for the current page
-            if ($i == $page) {
-                echo "<li><a class='active_link' href='index.php?page={$i}'>{$i}</a></li>";
-            } else {
-                echo "<li><a href='index.php?page={$i}'>{$i}</a></li>";                
-            }
-        }
-
-        ?>
-
-
-    </ul>
-
-
-
     <?php include "includes/footer.php"; ?>
