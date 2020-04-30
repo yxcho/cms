@@ -1,11 +1,56 @@
 <?php
 
-function confirmQuery($result){
+// find out how many users are online
+function usersOnline()
+{
+    if (isset($_GET['onlineusers'])) {
+
+        // confusion
+        if (!$connection) {
+            session_start();
+            include("../includes/db.php");
+
+
+
+
+            // every time we start a session, session_id() will catch the id of the sesssion
+            //  if you open with chrome, there will be a session id; open with safari, another session id
+            $session = session_id();
+            $time = time();
+            $time_out_in_seconds = 300;
+            $timeout = $time - $time_out_in_seconds;
+
+            $query = "SELECT * FROM users_online WHERE session = '$session'";
+            $send_query = mysqli_query($connection, $query);
+            $count = mysqli_num_rows($send_query);
+
+            // if nobody is online, num_rows returns 0
+            if ($count == NULL) {
+                $insert_query = "INSERT INTO users_online(session, time) VALUES ('$session','$time')";
+                mysqli_query($connection, $insert_query);
+            } else {
+                $update_users_online_query = "UPDATE users_online SET time = '$time' WHERE session ='$session'";
+                mysqli_query($connection, $update_users_online_query);
+            }
+
+            $users_online_query = mysqli_query($connection, "SELECT * FROM users_online WHERE time > '$timeout'");
+            echo $count_online_users = mysqli_num_rows($users_online_query);
+        }
+    } // get request isset
+}
+
+// call the function
+usersOnline();
+
+function confirmQuery($result)
+{
     global $connection;
     if (!$result) {
         die("QUERY FAILED " . mysqli_error($connection));
     }
 }
+
+
 
 
 
