@@ -25,7 +25,12 @@ if (isset($_POST['login'])) {
         $db_user_lastname = $row['user_lastname'];
         $db_user_role = $row['user_role'];
     }
-    if ($username === $db_username && $password === $db_user_password) {
+
+    // decrypt password
+    // $password is the password user types in and db_user_password is the encrypted password in db
+    $password = crypt($password, $db_user_password);
+
+    if ($username == $db_username && $password == $db_user_password) {
 
         $_SESSION['username'] = $db_username;
         $_SESSION['firstname'] = $db_user_firstname;

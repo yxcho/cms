@@ -9,11 +9,38 @@ if (isset($_POST['checkBoxArray'])) {
                 $update_status_to_published = mysqli_query($connection, $query);
                 confirmQuery($update_status_to_published);
                 break;
+
             case "draft":
                 $query = "UPDATE posts SET post_status = '{$bulk_options}' WHERE post_id = {$checkBoxPostIdValue} ";
 
                 $update_status_to_draft = mysqli_query($connection, $query);
                 confirmQuery($update_status_to_draft);
+                break;
+
+            case "clone":
+                $query = "SELECT * FROM posts WHERE post_id = '{$checkBoxPostIdValue}' ";
+                $copy_post_query = mysqli_query($connection, $query);
+
+                while ($row = mysqli_fetch_array(($copy_post_query))) {
+                    $post_category_id = $row['post_category_id'];
+                    $post_title = $row['post_title'];
+                    $post_author = $row['post_author'];
+                    $post_date = $row['post_date'];
+                    $post_status = $row['post_status'];
+                    $post_image = $row['post_image'];
+                    $post_tags = $row['post_tags'];
+                    $post_content = $row['post_content'];
+                }
+
+                $query = "INSERT INTO posts(post_category_id, post_title, post_author, post_date, post_status, post_image, post_tags, post_content) ";
+                $query .= "VALUES({$post_category_id}, '{$post_title}', '{$post_author}', '{$post_date}', '{$post_status}', '{$post_image}', '{$post_tags}', '{$post_content}') ";
+
+                $clone_query = mysqli_query($connection, $query);
+
+                if (!$clone_query) {
+                    die("QUERY FAILED" . mysqli_error($connection));
+                }
+
                 break;
             case "delete":
                 $query = "DELETE FROM posts WHERE post_id = {$checkBoxPostIdValue} ";
@@ -34,6 +61,7 @@ if (isset($_POST['checkBoxArray'])) {
                 <option value="">Select options</option>
                 <option value="published">Publish</option>
                 <option value="draft">Draft</option>
+                <option value="clone">Clone</option>
                 <option value="delete">Delete</option>
             </select>
         </div>
@@ -58,8 +86,10 @@ if (isset($_POST['checkBoxArray'])) {
                 <th>Comments</th>
                 <th>Dates</th>
                 <th>View post</th>
+                <th>Views</th>
                 <th>Edit</th>
                 <th>Delete</th>
+
             </tr>
         </thead>
 
@@ -68,7 +98,7 @@ if (isset($_POST['checkBoxArray'])) {
 
             <?php
 
-            $query = "SELECT * FROM posts ";
+            $query = "SELECT * FROM posts ORDER BY post_id DESC";
             $select_posts = mysqli_query($connection, $query);
 
             while ($row = mysqli_fetch_assoc($select_posts)) {
@@ -81,6 +111,7 @@ if (isset($_POST['checkBoxArray'])) {
                 $post_tags = $row['post_tags'];
                 $post_comment_count = $row['post_comment_count'];
                 $post_date = $row['post_date'];
+                $post_view_count = $row['post_view_count'];
 
                 echo "<tr>";
             ?>
@@ -111,9 +142,9 @@ if (isset($_POST['checkBoxArray'])) {
                 echo "<td>$post_comment_count</td>";
                 echo "<td>$post_date</td>";
                 echo "<td><a href='../post.php?p_id={$post_id}'>View post</a></td>";
-
+                echo "<td><a href='posts.php?resetViews={$post_id}'>$post_view_count</a></td>";
                 echo "<td><a href='posts.php?source=edit_post&p_id={$post_id}'>Edit</a></td>";
-                echo "<td><a href='posts.php?delete={$post_id}'>Delete</a></td>";
+                echo "<td><a onClick=\"javascript:return confirm('Are you sure you want to delete?')\" href='posts.php?delete={$post_id}'>Delete</a></td>";
                 echo "</tr>";
             }
             ?>
@@ -129,6 +160,14 @@ if (isset($_GET['delete'])) {
     $the_post_id = $_GET['delete'];
     $query = "DELETE FROM posts WHERE post_id= {$the_post_id}";
     $delete_query = mysqli_query($connection, $query);
+    header("Location:posts.php");
+}
+
+
+if (isset($_GET['resetViews'])) {
+    $the_post_id = $_GET['resetViews'];
+    $query = "UPDATE posts SET post_view_count = 0 WHERE post_id =" . mysqli_real_escape_string($connection, $_GET['resetViews']) . " ";
+    $reset_view_query = mysqli_query($connection, $query);
     header("Location:posts.php");
 }
 ?>
