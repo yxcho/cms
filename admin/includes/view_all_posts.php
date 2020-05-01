@@ -77,7 +77,7 @@ if (isset($_POST['checkBoxArray'])) {
             <tr>
                 <th><input type="checkbox" id="selectAllBoxes"></th>
                 <th>Id</th>
-                <th>Author</th>
+                <th>User</th>
                 <th>Title</th>
                 <th>Category</th>
                 <th>Status</th>
@@ -103,6 +103,7 @@ if (isset($_POST['checkBoxArray'])) {
 
             while ($row = mysqli_fetch_assoc($select_posts)) {
                 $post_id = $row['post_id'];
+                $post_user = $row['post_user'];
                 $post_author = $row['post_author'];
                 $post_title = $row['post_title'];
                 $post_category_id = $row['post_category_id'];
@@ -120,7 +121,15 @@ if (isset($_POST['checkBoxArray'])) {
 
             <?php
                 echo "<td>$post_id</td>";
-                echo "<td>$post_author</td>";
+
+                if (!empty($post_author)){
+                    echo "<td>$post_author</td>";
+                } elseif(!empty($post_user)){
+                    echo "<td>$post_user</td>";
+
+                }
+
+                
                 echo "<td>$post_title</td>";
 
 
@@ -139,7 +148,19 @@ if (isset($_POST['checkBoxArray'])) {
                 echo "<td>$post_status</td>";
                 echo "<td><img width='100' src='../images/$post_image' alt='image'> </td>";
                 echo "<td>$post_tags</td>";
-                echo "<td>$post_comment_count</td>";
+
+
+                // count number of comments addressed to a post
+                $query = "SELECT * FROM comments WHERE comment_post_id = $post_id";
+                $send_comment_query = mysqli_query($connection, $query);
+                $comment_counts = mysqli_num_rows($send_comment_query);
+
+                // to get all the comments related to a post
+                $row = mysqli_fetch_array($send_comment_query);
+                // $comment_id = $row['comment_id'];
+
+                echo "<td><a href='view_post_comments.php?id=$post_id'>$comment_counts</a></td>";
+
                 echo "<td>$post_date</td>";
                 echo "<td><a href='../post.php?p_id={$post_id}'>View post</a></td>";
                 echo "<td><a href='posts.php?resetViews={$post_id}'>$post_view_count</a></td>";
