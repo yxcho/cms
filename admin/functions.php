@@ -1,5 +1,13 @@
 <?php
 
+// prevents SQL injection
+function escape($string)
+{
+    global $connection;
+    return mysqli_real_escape_string($connection, trim(strip_tags($string)));
+}
+
+
 // find out how many users are online
 function usersOnline()
 {
@@ -110,4 +118,27 @@ function deleteCategory()
         $delete_query = mysqli_query($connection, $query);
         header("Location:categories.php");
     }
+}
+
+
+// count the number of rows in a selected query
+function recordCount($table)
+{
+    global $connection;
+    $query = "SELECT * FROM " . $table;
+    $select_all_posts = mysqli_query($connection, $query);
+    $result = mysqli_num_rows($select_all_posts);
+    confirmQuery($result);
+    return $result;
+}
+
+
+function checkStatus($table, $column, $status)
+{
+    global $connection;
+    
+    $query = "SELECT * FROM $table WHERE $column = '$status' ";
+    $result = mysqli_query($connection, $query);
+    confirmQuery($result);
+    return mysqli_num_rows($result);
 }

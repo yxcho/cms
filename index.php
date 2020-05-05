@@ -29,27 +29,40 @@ include "includes/db.php";
                 $page_1 = ($page * $post_per_page) - $post_per_page;
             }
 
+
+            // let admin see every post, including the draft ones 
+            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == "admin") {
+                $post_count_query = "SELECT * FROM posts";
+            } else {
+                $post_count_query = "SELECT * FROM posts WHERE post_status = 'published'";
+
+            }
+
+
             // count total number of posts, to do pagination
-            $post_count_query = "SELECT * FROM posts";
             $post_count = mysqli_query($connection, $post_count_query);
             $total_post_count = mysqli_num_rows($post_count);
-            $page_needed = ceil($total_post_count / $post_per_page);
+
+            // if there are no 'published' posts
+            if ($total_post_count < 1) {
+                echo "<h1 class='text-center'>There is no post available</h1>";
+            } else {
+                $page_needed = ceil($total_post_count / $post_per_page);
+
+                // With two arguments, the first argument specifies the offset of the first row to return, and the second specifies the maximum number of rows to return. The offset of the initial row is 0 (not 1)
+                $query = "SELECT * FROM posts LIMIT $page_1, $post_per_page";
+                $select_all_posts_query = mysqli_query($connection, $query);
+
+                while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
+                    $post_id = $row['post_id'];
+                    $post_title = $row['post_title'];
+                    $post_author = $row['post_user'];
+                    $post_date = $row['post_date'];
+                    $post_image = $row['post_image'];
+                    $post_content = substr($row['post_content'], 0, 100);
+                    $post_status = $row['post_status'];
 
 
-            // With two arguments, the first argument specifies the offset of the first row to return, and the second specifies the maximum number of rows to return. The offset of the initial row is 0 (not 1)
-            $query = "SELECT * FROM posts LIMIT $page_1, $post_per_page";
-            $select_all_posts_query = mysqli_query($connection, $query);
-
-            while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
-                $post_id = $row['post_id'];
-                $post_title = $row['post_title'];
-                $post_author = $row['post_user'];
-                $post_date = $row['post_date'];
-                $post_image = $row['post_image'];
-                $post_content = substr($row['post_content'], 0, 100);
-                $post_status = $row['post_status'];
-
-                if ($post_status === "published") {
             ?>
                     <h1 class="page-header">
                         Page Heading
@@ -98,7 +111,7 @@ include "includes/db.php";
             if ($i == $page) {
                 echo "<li><a class='active_link' href='index.php?page={$i}'>{$i}</a></li>";
             } else {
-                echo "<li><a href='index.php?page={$i}'>{$i}</a></li>";                
+                echo "<li><a href='index.php?page={$i}'>{$i}</a></li>";
             }
         }
 

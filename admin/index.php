@@ -28,23 +28,16 @@
 
             <?php
 
-            $query = "SELECT * FROM posts WHERE post_status = 'published'";
-            $select_all_published_posts = mysqli_query($connection, $query);
-            $publish_post_count = mysqli_num_rows($select_all_published_posts);
-
-            $query = "SELECT * FROM posts WHERE post_status = 'draft'";
-            $select_all_draft_posts = mysqli_query($connection, $query);
-            $draft_post_count = mysqli_num_rows($select_all_draft_posts);
+            $publish_post_count = checkStatus("posts", "post_status", "published");
 
 
-            $query = "SELECT * FROM comments WHERE comment_status = 'rejected'";
-            $select_all_rejected_comments = mysqli_query($connection, $query);
-            $rejected_comments_count = mysqli_num_rows($select_all_rejected_comments);
+            $draft_post_count = checkStatus("posts", "post_status", "draft");
 
 
-            $query = "SELECT * FROM users WHERE user_role = 'subscriber'";
-            $select_all_subscribers = mysqli_query($connection, $query);
-            $subscriber_count = mysqli_num_rows($select_all_subscribers);
+            $rejected_comments_count = checkStatus("comments", "comment_status", "rejected");
+
+
+            $subscriber_count = checkStatus("users", "user_role", "subscriber");
 
             ?>
 
