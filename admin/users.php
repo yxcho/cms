@@ -1,4 +1,15 @@
 <?php include "includes/admin_header.php"; ?>
+
+
+
+<?php
+// redirect to index.php if the user isnt admin
+if (!isAdmin($_SESSION['username'])) {
+    header("Location:index.php");
+}
+?>
+
+
 <div id="wrapper">
 
     <!-- Navigation -->
