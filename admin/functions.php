@@ -72,17 +72,19 @@ function insert_category()
         if ($cat_title == "" || empty($cat_title)) {
             echo "Category field should not be empty";
         } else {
-            $query =
-                "INSERT INTO categories(cat_title) ";
-            $query .=
-                "VALUE('{$cat_title}')";
 
-            $create_category_query = mysqli_query($connection, $query);
+            $statement =
+                mysqli_prepare($connection, "INSERT INTO categories(cat_title) VALUES(?)");
 
-            if (!$create_category_query) {
+            mysqli_stmt_bind_param($statement, "s", $cat_title);
+            mysqli_stmt_execute($statement);
+
+
+            if (!$statement) {
                 die("ADD CATEGORY FAILED" . mysqli_error($connection));
             }
         }
+        mysqli_stmt_close($statement);
     }
 }
 
